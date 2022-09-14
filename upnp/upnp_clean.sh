@@ -33,6 +33,10 @@ port=($(   echo "$sanitized_entries"                                          |\
 # Note: zsh and bash differ in terms of the first index for arrays
 for i in $( seq 0 $( bc <<< "$sanitized_entry_num-1" ))
 do
+    # let's be gentle with some museum routers:
+    # we are effectively launching DoS to these craps
+    sleep 10
+
     echo ${idx[$i]} ${proto[$i]} ${port[$i]} 1>&2
     upnpc -d ${port[$i]} ${proto[$i]} 1>/dev/null 2>/dev/null && echo OK 1>&2
 done
