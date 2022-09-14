@@ -23,7 +23,8 @@ idx=($(    echo "$sanitized_entries"                                          |\
            cut -f 1 -d ' '                                                    ))
 
 proto=($(  echo "$sanitized_entries"                                          |\
-           cut -f 2 -d ' '                                                    ))
+           cut -f 2 -d ' '                                                    |\
+           tr '[:lower:]' '[:upper:]' `# the client only accepts uppercase`   ))
 
 port=($(   echo "$sanitized_entries"                                          |\
            cut -f 3 -d ' '                                                    |\
