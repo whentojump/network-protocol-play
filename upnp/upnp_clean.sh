@@ -23,15 +23,28 @@ idx=($(    echo "$sanitized_entries"                                          |\
            cut -f 1 -d ' '                                                    ))
 
 proto=($(  echo "$sanitized_entries"                                          |\
-           cut -f 2 -d ' '                                                    ))
+           cut -f 2 -d ' '                                                    |\
+           tr '[:lower:]' '[:upper:]' `# the client only accepts uppercase`   ))
 
 port=($(   echo "$sanitized_entries"                                          |\
            cut -f 3 -d ' '                                                    |\
            cut -f 1 -d '-'                                                    ))
 
+log_prefix="./"
+
+log_filename="log-$( date +%Y%m%d%H%M ).txt"
+
+log=${log_prefix}${log_filename}
+
 # Note: zsh and bash differ in terms of the first index for arrays
 for i in $( seq 0 $( bc <<< "$sanitized_entry_num-1" ))
 do
-    echo ${idx[$i]} ${proto[$i]} ${port[$i]} 1>&2
-    upnpc -d ${port[$i]} ${proto[$i]} 1>/dev/null 2>/dev/null && echo OK 1>&2
+    # let's be gentle with some museum routers:
+    # we are effectively launching DoS to these craps
+    sleep 10
+
+    echo ${idx[$i]} ${proto[$i]} ${port[$i]} 2>&1 | tee -a $log | cat 1>&2
+    upnpc -d ${port[$i]} ${proto[$i]} 2>&1 >> $log                           &&\
+        echo OK | tee -a $log | cat 1>&2
+    echo >> $log
 done
