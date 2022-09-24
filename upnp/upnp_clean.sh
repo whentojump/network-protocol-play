@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Warning:      Back up what were there before runing this.
+# Warning:      Back up what were there before running this.
 # Prerequisite: Allow 1900 UDP in.
 # TODO:         This is time-consuming. Optimize this with cURL or libminiupnpc
 #               or whatever.
